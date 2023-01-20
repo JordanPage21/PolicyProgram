@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.mainController">
+   <children>
+      <Button layoutX="161.0" layoutY="186.0" mnemonicParsing="false" onAction="#directoryChooser" prefHeight="25.0" prefWidth="79.0" text="Upload" />
+      <Label layoutX="71.0" layoutY="83.0" text="Select the unzipped folder:">
+         <font>
+            <Font name="Times New Roman" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="directoryLabel" layoutX="-1.0" layoutY="138.0" prefHeight="17.0" prefWidth="400.0" style="-fx-alignment: center;" text="No folder uploaded..." />
+      <Button fx:id="directoryNextButton" layoutX="161.0" layoutY="230.0" mnemonicParsing="false" onAction="#startComparison" prefHeight="25.0" prefWidth="79.0" text="Next" visible="false" />
+      <Label fx:id="directoryErrorLabel" layoutX="1.0" layoutY="234.0" prefHeight="17.0" prefWidth="400.0" style="-fx-alignment: center;" text="Error... Folder Empty" visible="false" />
+   </children>
+</AnchorPane>

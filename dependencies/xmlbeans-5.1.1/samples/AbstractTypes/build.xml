@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+Copyright 2004 The Apache Software Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ -->
+
+<project name="abstracttypes" basedir="." default="build-run" >
+
+    <!-- ===================================================================
+       - Properties
+      -->
+
+    <property environment="env"/>
+
+    <target name="init">
+        <property name="xmlbeans.home" value="${env.XMLBEANS_HOME}"/>
+        <echo message="xmlbeans.home: ${xmlbeans.home}"/>
+
+        <!-- check for xmlbeans-*.jar from binary distribution -->
+        <pathconvert property="xmlbeans.lib" setonempty="false" pathsep=" ">
+            <path><fileset dir="${xmlbeans.home}/libs" includes="xmlbeans-*.jar" /></path>
+        </pathconvert>
+
+        <fail message="Set XMLBEANS_HOME in your enviornment." unless="xmlbeans.lib"/>
+
+        <echo message="xmlbeans.lib: ${xmlbeans.lib}"/>
+        <path id="xmlbeans.path">
+            <fileset dir="${xmlbeans.home}/libs" includes="*.jar"/>
+        </path>
+
+        <taskdef name="scomp"
+            classname="org.apache.xmlbeans.impl.tool.XMLBean"
+            classpathref="xmlbeans.path"/>
+    </target>
+
+    <property name="abstract.jar" value="abstractbase.jar"/>
+    <property name="myfigures.jar" value="mytypes.jar"/>
+
+    <target name="build-run" depends="build,run"/>
+
+    <target name="schemas.abstract.check">
+        <uptodate property="schemas.abstract.notRequired" targetfile="build/${abstract.jar}">
+            <srcfiles dir="schemas" includes="abstractBase.xsd"/>
+        </uptodate>
+    </target>
+
+    <target name="build.check">
+        <uptodate property="build.notRequired" targetfile="build/org/apache/xmlbeans/samples/abstracttypes/AbstractTypes.class">
+            <srcfiles dir="." includes="schemas/*.xsd,src/**/*.java"/>
+        </uptodate>
+    </target>
+
+    <target name="schemas.abstract" depends="init,schemas.abstract.check" unless="schemas.abstract.notRequired">
+        <mkdir dir="build"/>
+        <scomp schema="schemas/abstractBase.xsd" destfile="build/${abstract.jar}">
+            <classpath>
+                <path refid="xmlbeans.path"/>
+            </classpath>
+        </scomp>
+    </target>
+
+    <target name="build" depends="init,schemas.abstract,build.check" unless="build.notRequired">
+        <scomp schema="schemas/myfigures.xsd" destfile="build/${myfigures.jar}">
+            <classpath>
+                <pathelement location="build/${abstract.jar}"/>
+                <path refid="xmlbeans.path"/>
+            </classpath>
+        </scomp>
+
+        <pathconvert property="exe" setonempty="false">
+            <fileset dir="${env.JAVA_HOME}/bin" includes="javac, javac.exe"/>
+        </pathconvert>
+        <pathconvert property="exe" setonempty="false">
+            <fileset dir="${env.JAVA_HOME}/../bin" includes="javac, javac.exe"/>
+        </pathconvert>
+
+        <javac srcdir="src" destdir="build" debug="on" source="1.8" executable="${exe}" fork="yes">
+            <classpath>
+                <path refid="xmlbeans.path"/>
+                <pathelement location="build/${abstract.jar}"/>
+                <pathelement location="build/${myfigures.jar}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="run" depends="build">
+        <java classname="org.apache.xmlbeans.samples.abstracttypes.AbstractTypes" fork="yes">
+            <classpath>
+                <path refid="xmlbeans.path"/>
+                <pathelement location="build/${abstract.jar}"/>
+                <pathelement location="build/${myfigures.jar}"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="test" depends="build">
+        <echo message="============================== testing AbstractTypes"/>
+        <java classname="org.apache.xmlbeans.samples.abstracttypes.AbstractTypesTest" fork="yes">
+            <classpath>
+                <path refid="xmlbeans.path"/>
+                <pathelement location="build/${abstract.jar}"/>
+                <pathelement location="build/${myfigures.jar}"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="clean">
+        <delete quiet="true" dir="build"/>
+    </target>
+</project>

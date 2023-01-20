@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.mainController">
+   <children>
+      <Label layoutX="36.0" layoutY="111.0" text="Is the new policy folder a zip file?">
+         <font>
+            <Font name="Times New Roman" size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="yesZipButton" layoutX="104.0" layoutY="169.0" mnemonicParsing="false" onAction="#yesZip" prefHeight="25.0" prefWidth="193.0" text="Yes, it is zipped." />
+      <Button fx:id="noFolderButton" layoutX="104.0" layoutY="215.0" mnemonicParsing="false" onAction="#noFolder" text="No, it has already been extracted." />
+   </children>
+</AnchorPane>
